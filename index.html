@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>結婚までカウントダウン</title>
+
+  <style>
+    :root {
+      --bg:#f7efe8;        /* ベージュ */
+      --card:#ffffff;
+      --text:#3b2f2f;
+      --muted:#8b7d7b;
+      --accent:#ff6fae;   /* ピンク */
+    }
+
+    body.navy {
+      --bg:#f5f0e8;
+      --text:#1f2a44;
+      --muted:#6b7280;
+      --accent:#1f3a8a;   /* ネイビー */
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      background:
+        radial-gradient(900px 600px at 20% 10%, #ffe3f2 0%, var(--bg) 55%, #eef7ff 100%);
+      font-family: ui-rounded, system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+      color:var(--text);
+    }
+
+    .card{
+      width:min(560px, 92vw);
+      background:var(--card);
+      border-radius:26px;
+      padding:28px 22px 30px;
+      box-shadow:0 20px 50px rgba(0,0,0,.12);
+      border:1px solid rgba(0,0,0,.06);
+      text-align:center;
+    }
+
+    h1{
+      margin:0 0 14px;
+      font-size:20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .theme-toggle{
+      font-size:12px;
+      border:1px solid rgba(0,0,0,.15);
+      border-radius:999px;
+      padding:6px 10px;
+      cursor:pointer;
+      background:#fff;
+    }
+
+    .big{
+      font-size:60px;
+      line-height:1.05;
+      margin:18px 0 10px;
+      letter-spacing:-1px;
+    }
+
+    .sub{
+      color:var(--muted);
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      background:rgba(255,255,255,.85);
+      border:1px solid rgba(0,0,0,.1);
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:13px;
+    }
+
+    .foot{
+      margin-top:18px;
+      font-size:12px;
+      color:var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <h1>
+      結婚までカウントダウン 🐱
+      <span class="theme-toggle" id="themeBtn">🎀 ピンク</span>
+    </h1>
+
+    <div class="big" id="days">—</div>
+    <p class="sub">ゴール：2026年12月31日</p>
+
+    <div class="pill" id="message">
+      ฅ^•ω•^ฅ 今日も未来に一歩にゃ
+    </div>
+
+    <div class="foot">
+      スマホ・PC対応／URL共有OK
+    </div>
+  </main>
+
+  <script>
+    const $days = document.getElementById("days");
+    const $themeBtn = document.getElementById("themeBtn");
+
+    const GOAL = new Date(2026, 11, 31); // 2026-12-31
+    GOAL.setHours(12,0,0,0);
+
+    function todayJST(){
+      const now = new Date();
+      const jst = new Date(
+        now.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })
+      );
+      jst.setHours(12,0,0,0);
+      return jst;
+    }
+
+    function render(){
+      const diff =
+        Math.ceil((GOAL - todayJST()) / 86400000);
+
+      if(diff > 0){
+        $days.textContent = `あと ${diff}日`;
+      } else if(diff === 0){
+        $days.textContent = "今日！";
+      } else {
+        $days.textContent = "達成 🎉";
+      }
+    }
+
+    // 初期表示
+    render();
+
+    // 毎分更新（0時またぎ対応）
+    setInterval(render, 60000);
+
+    // テーマ切り替え
+    $themeBtn.onclick = () => {
+      document.body.classList.toggle("navy");
+      const isNavy = document.body.classList.contains("navy");
+      $themeBtn.textContent = isNavy ? "🫐 ネイビー" : "🎀 ピンク";
+    };
+  </script>
+</body>
+</html>
